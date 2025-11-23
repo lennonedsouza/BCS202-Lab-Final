@@ -1,4 +1,3 @@
-// java
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.net.URL;
@@ -16,10 +15,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.SVGPath;
 
-/* ============================
-   === ORIGINAL EXCEPTIONS ===
-   ============================ */
-
+//Exceptions
 class ProductNotFoundException extends Exception {
     public ProductNotFoundException(String message) {
         super(message);
@@ -44,11 +40,7 @@ class InventoryFullException extends Exception {
     }
 }
 
-/* ============================
-   === ORIGINAL MODELS & MANAGER ===
-   (Kept exactly as provided — unchanged)
-   ============================ */
-
+//Product Class
 class Product{
 
     private int productId;
@@ -99,6 +91,7 @@ class Product{
     }
 }
 
+//Perishable Product Class
 class PerishableProduct extends Product {
     private String expiryDate;
 
@@ -120,6 +113,7 @@ class PerishableProduct extends Product {
     }
 }
 
+//Inventory Manager Class
 class InventoryManager{
 
     private Product[] products;
@@ -208,13 +202,7 @@ class InventoryManager{
     }
 }
 
-
-/* ============================
-   === UI LAUNCHER & JavaFX UI ===
-   All UI code below - interacts with the unchanged InventoryManager and exception classes.
-   ============================ */
-
-// A lightweight launcher class — run this 'java InventoryApp' to start UI
+//UI
 class InventoryApp {
     public static void main(String[] args) {
         Application.launch(InventoryUI.class, args);
@@ -245,7 +233,6 @@ public class InventoryUI extends Application {
         root = new BorderPane();
         root.setPadding(new Insets(20));
 
-        // Header
         VBox header = new VBox();
         header.setAlignment(Pos.CENTER);
         Text title = new Text("Inventory Manager");
@@ -257,12 +244,10 @@ public class InventoryUI extends Application {
         header.setSpacing(6);
         root.setTop(header);
 
-        // Center stack
         centerStack = new StackPane();
         centerStack.setPrefSize(800, 500);
         root.setCenter(centerStack);
 
-        // Panes
         Pane homePane = buildHomePane();
         Pane addPane = buildAddPane();
         Pane viewPane = buildViewPane();
@@ -297,9 +282,7 @@ public class InventoryUI extends Application {
         pt.play();
     }
 
-    /* ======================
-       Home Pane
-       ====================== */
+
     private Pane buildHomePane() {
         VBox box = new VBox();
         box.setAlignment(Pos.CENTER);
@@ -328,9 +311,7 @@ public class InventoryUI extends Application {
         return wrapNamedPane(box, "home");
     }
 
-    /* ======================
-       Add Pane
-       ====================== */
+
     private Pane buildAddPane() {
         VBox mainContainer = new VBox(15);
         mainContainer.setPadding(new Insets(20));
@@ -418,15 +399,13 @@ public class InventoryUI extends Application {
         }
     }
 
-    /* ======================
-       View Pane
-       ====================== */
+
     private Pane buildViewPane() {
-        VBox outer = new VBox(10); // Reduced spacing between sections
+        VBox outer = new VBox(10); 
         outer.setPadding(new Insets(20));
         outer.setAlignment(Pos.TOP_CENTER);
 
-        // Header with back arrow
+
         HBox headerBox = new HBox();
         headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.setPadding(new Insets(0,0,10,0));
@@ -439,7 +418,7 @@ public class InventoryUI extends Application {
         HBox.setHgrow(headerBox, Priority.ALWAYS);
         headerBox.setAlignment(Pos.CENTER);
 
-        // Toggle view - positioned at top
+
         HBox toggleBox = new HBox(10);
         toggleBox.setAlignment(Pos.CENTER);
         ToggleButton pageViewBtn = new ToggleButton("Page View");
@@ -454,19 +433,19 @@ public class InventoryUI extends Application {
         styleToggleButton(tableViewBtn, "#4ECDC4");
         toggleBox.getChildren().addAll(pageViewBtn, tableViewBtn);
 
-        // Content area that holds both pagination and table
+
         StackPane contentArea = new StackPane();
         contentArea.setAlignment(Pos.TOP_CENTER);
         contentArea.setMinHeight(400);
         contentArea.setPrefHeight(400);
         contentArea.setMaxHeight(400);
 
-        // Pagination - positioned right below toggle buttons
+
         viewPagination = new Pagination(1);
         viewPagination.setPageFactory((index) -> createPageView(index));
         viewPagination.setMaxHeight(350);
 
-        // Table ScrollPane - positioned right below toggle buttons
+
         tableContainer = new VBox();
         tableContainer.setAlignment(Pos.TOP_CENTER);
         tableContainer.setSpacing(2);
@@ -482,10 +461,9 @@ public class InventoryUI extends Application {
         tableScrollPane.setVisible(false);
         tableScrollPane.setStyle("-fx-background: transparent; -fx-border-color: transparent;");
 
-        // Add both to content area
+
         contentArea.getChildren().addAll(viewPagination, tableScrollPane);
 
-        // Toggle listener
         viewToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
             if (newToggle != null) {
                 String viewType = (String) newToggle.getUserData();
@@ -551,7 +529,7 @@ public class InventoryUI extends Application {
 
 
     private void refreshTableView() {
-        tableContainer.getChildren().clear();   // <-- clear previous rows
+        tableContainer.getChildren().clear();
 
         if (uiProducts.size() == 0) {
             Label emptyLabel = new Label("No products yet. Use Add Product to create some.");
@@ -580,10 +558,10 @@ public class InventoryUI extends Application {
             tableContainer.getChildren().add(dataRow);
         }
 
-        // Force the table to maintain proper size
+
         tableContainer.setMinHeight(Region.USE_PREF_SIZE);
         tableScrollPane.setFitToHeight(true);
-        tableScrollPane.setVvalue(0); // Scroll to top
+        tableScrollPane.setVvalue(0); 
     }
 
     private Label createTableLabel(String text, double width, boolean isHeader) {
@@ -601,9 +579,6 @@ public class InventoryUI extends Application {
         refreshTableView();
     }
 
-    /* ======================
-       Helper: Show Status with 2s auto-clear
-       ====================== */
     private void showStatus(Label label, String msg, Color color) {
         label.setText(msg);
         label.setTextFill(color);
@@ -613,15 +588,12 @@ public class InventoryUI extends Application {
         pt.play();
     }
 
-    /* ============================
-       Search Pane
-       ============================ */
     private Pane buildSearchPane() {
         VBox mainContainer = new VBox(15);
         mainContainer.setPadding(new Insets(20));
         mainContainer.setAlignment(Pos.TOP_CENTER);
 
-        // Header with back arrow
+
         HBox headerBox = new HBox();
         headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.setPadding(new Insets(0, 0, 10, 0));
@@ -634,7 +606,7 @@ public class InventoryUI extends Application {
 
         Text header = new Text("Search Product By ID");
         header.setFont(Font.font("Segoe UI", FontWeight.BOLD, 24));
-        header.setFill(Color.web("#45B7D1")); // Sky Blue to match button
+        header.setFill(Color.web("#45B7D1"));
 
         headerBox.getChildren().addAll(backArrow, header);
         HBox.setHgrow(headerBox, Priority.ALWAYS);
@@ -648,7 +620,7 @@ public class InventoryUI extends Application {
         idField.setPromptText("Product ID (integer)");
         styleTextField(idField);
 
-        Button findBtn = styledButton("Search Product", "#45B7D1", 160, 45); // Sky Blue
+        Button findBtn = styledButton("Search Product", "#45B7D1", 160, 45); 
         Label result = new Label();
         result.setWrapText(true);
         result.setMaxWidth(350);
@@ -699,15 +671,11 @@ public class InventoryUI extends Application {
         }
     }
 
-    /* ============================
-       Update Pane (skip with empty fields)
-       ============================ */
     private Pane buildUpdatePane() {
         VBox mainContainer = new VBox(15);
         mainContainer.setPadding(new Insets(20));
         mainContainer.setAlignment(Pos.TOP_CENTER);
 
-        // Header with back arrow
         HBox headerBox = new HBox();
         headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.setPadding(new Insets(0, 0, 10, 0));
@@ -720,7 +688,7 @@ public class InventoryUI extends Application {
 
         Text header = new Text("Update Product");
         header.setFont(Font.font("Segoe UI", FontWeight.BOLD, 24));
-        header.setFill(Color.web("#FFBE0B")); // Amber to match button
+        header.setFill(Color.web("#FFBE0B")); 
 
         headerBox.getChildren().addAll(backArrow, header);
         HBox.setHgrow(headerBox, Priority.ALWAYS);
@@ -742,7 +710,7 @@ public class InventoryUI extends Application {
         qtyField.setPromptText("New Quantity (leave empty to skip)");
         styleTextField(qtyField);
 
-        Button updateBtn = styledButton("Update Product", "#FFBE0B", 160, 45); // Amber
+        Button updateBtn = styledButton("Update Product", "#FFBE0B", 160, 45); 
         Label status = new Label();
 
         updateBtn.setOnAction(e -> {
@@ -768,11 +736,8 @@ public class InventoryUI extends Application {
                         throw new InvalidInputException("Invalid quantity format.");
                     }
                 }
-
-                // Call original update method which accepts Double and Integer (or null)
                 try {
                     manager.updateProductById(id, newPrice, newQty);
-                    // update mirror list
                     for (int i = 0; i < uiProducts.size(); i++) {
                         if (uiProducts.get(i).getProductId() == id) {
                             Product p = uiProducts.get(i);
@@ -812,20 +777,16 @@ public class InventoryUI extends Application {
                 if (node instanceof TextField) {
                     ((TextField) node).clear();
                 }
-                // Keep Label intact to show status
             }
         }
     }
 
-    /* ============================
-       Delete Pane
-       ============================ */
     private Pane buildDeletePane() {
         VBox mainContainer = new VBox(15);
         mainContainer.setPadding(new Insets(20));
         mainContainer.setAlignment(Pos.TOP_CENTER);
 
-        // Header with back arrow
+
         HBox headerBox = new HBox();
         headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.setPadding(new Insets(0, 0, 10, 0));
@@ -838,7 +799,7 @@ public class InventoryUI extends Application {
 
         Text header = new Text("Delete Product");
         header.setFont(Font.font("Segoe UI", FontWeight.BOLD, 24));
-        header.setFill(Color.web("#FF6B6B")); // Coral Red to match button
+        header.setFill(Color.web("#FF6B6B")); 
 
         headerBox.getChildren().addAll(backArrow, header);
         HBox.setHgrow(headerBox, Priority.ALWAYS);
@@ -852,7 +813,7 @@ public class InventoryUI extends Application {
         idField.setPromptText("Product ID (integer)");
         styleTextField(idField);
 
-        Button delBtn = styledButton("Delete Product", "#FF6B6B", 160, 45); // Coral Red
+        Button delBtn = styledButton("Delete Product", "#FF6B6B", 160, 45); 
         Label status = new Label();
 
         delBtn.setOnAction(e -> {
@@ -860,7 +821,6 @@ public class InventoryUI extends Application {
                 int id = Integer.parseInt(idField.getText().trim());
                 try {
                     manager.deleteProductById(id);
-                    // remove from mirror list
                     uiProducts.removeIf(p -> p.getProductId() == id);
                     status.setText("✓ Product deleted successfully!");
                     status.setTextFill(Color.GREEN);
@@ -888,7 +848,7 @@ public class InventoryUI extends Application {
                 if (node instanceof TextField) {
                     ((TextField) node).clear();
                 }
-                // Keep Label intact to show status
+
             }
         }
     }
@@ -932,7 +892,6 @@ public class InventoryUI extends Application {
             }
         });
 
-        // Set initial state
         if (button.isSelected()) {
             button.setStyle("-fx-background-color: " + color + "; -fx-background-radius: 6; -fx-border-radius: 6; -fx-padding: 8 16; -fx-text-fill: white;");
         }
@@ -954,9 +913,6 @@ public class InventoryUI extends Application {
         return null;
     }
 
-    /* ============================
-       Utility: Styled button factory
-       ============================ */
     private Button styledButton(String text, String colorHex, double width, double height) {
         Button b = new Button(text);
         b.setStyle("-fx-background-color: " + colorHex + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 10 18; -fx-font-size: 14;");
@@ -972,9 +928,6 @@ public class InventoryUI extends Application {
         return b;
     }
 
-    /* ============================
-       Dialog helpers for exceptions & info
-       ============================ */
     private void showExceptionDialog(String msg) {
         Alert a = new Alert(Alert.AlertType.ERROR);
         a.setTitle("Error");
@@ -989,4 +942,5 @@ public class InventoryUI extends Application {
         a.setContentText(msg);
         a.showAndWait();
     }
+
 }
