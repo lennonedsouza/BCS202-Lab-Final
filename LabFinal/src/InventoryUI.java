@@ -935,12 +935,5 @@ public class InventoryUI extends Application {
         a.setContentText(msg);
         a.showAndWait();
     }
-    private void showInfoDialog(String msg) {
-        Alert a = new Alert(Alert.AlertType.INFORMATION);
-        a.setTitle("Info");
-        a.setHeaderText(null);
-        a.setContentText(msg);
-        a.showAndWait();
-    }
-
 }
+
